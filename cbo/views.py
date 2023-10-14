@@ -3,7 +3,7 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from .models import Occupation, Record, Procedure, Cid
-from .process_files import process_procedure_txt_file
+from .process_files import DataImporter
 from django.shortcuts import redirect
 
 
@@ -16,7 +16,7 @@ class UploadFilesView(View):
     def post(self, request):
         arquivos = request.FILES.getlist('arquivos_txt')
 
-        process_procedure_txt_file(arquivos)
+        DataImporter.import_procedure_data(arquivos)
 
         return redirect('home')
 
