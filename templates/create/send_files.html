@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Envio de Arquivos</title>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data" action="{% url 'upload_files' %}">
+        {% csrf_token %}
+        {% comment %} <label for="">Occupation</label>
+        <input type="file" name="arquivos_txt" accept=".txt"><br> {% endcomment %}
+        <label for="">Procedure</label>
+        <input type="file" name="arquivos_txt" accept=".txt"><br>
+        {% comment %} <label for="">Record</label>
+        <input type="file" name="arquivos_txt" accept=".txt"><br>
+        <label for="">Cid</label>
+        <input type="file" name="arquivos_txt" accept=".txt"><br>
+        <label for="">Procedure_has_cid</label>
+        <input type="file" name="arquivos_txt" accept=".txt"><br>
+        <label for="">Procedure_has_occupation</label>
+        <input type="file" name="arquivos_txt" accept=".txt"><br>
+        <label for="">Procedure_has_record</label>
+        <input type="file" name="arquivos_txt" accept=".txt"><br>{% endcomment %}
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>

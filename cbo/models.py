@@ -4,7 +4,7 @@ from django.conf import settings
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    last_update = models.DateTimeField(auto_now=True)
+    update_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
@@ -30,7 +30,7 @@ class Occupation(BaseModel):
 
 
 class Occupation_history(BaseModel):
-    occupation_code = models.CharField(max_length=6, primary_key=True)
+    occupation_code = models.AutoField(primary_key=True)
     name = models.CharField(max_length=150, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='occupations_history')
     occupation = models.ForeignKey(Occupation, on_delete=models.CASCADE, null=True, related_name='occupations_history')
@@ -43,7 +43,7 @@ class Record(BaseModel):
 
 
 class Record_history(BaseModel):
-    record_code = models.CharField(max_length=2, primary_key=True)
+    record_code = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50, null=False)
     competence_date = models.CharField(max_length=6, null=False)
     record = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, related_name='records_history')
@@ -64,11 +64,10 @@ class Procedure(BaseModel):
     SP_value = models.IntegerField(null=True)
     stay_time_number = models.IntegerField(null=True)
     competence_date = models.CharField(max_length=6, null=True)
-    record = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, related_name='procedures')
 
 
 class Procedure_history(BaseModel):
-    procedure_code = models.CharField(max_length=10, primary_key=True)
+    procedure_code = models.AutoField(primary_key=True)
     name = models.CharField(max_length=250, null=True)
     complexity_type = models.CharField(max_length=1, null=True)
     sex_type = models.CharField(max_length=1, null=True)
@@ -82,7 +81,6 @@ class Procedure_history(BaseModel):
     SP_value = models.IntegerField(null=True)
     stay_time_number = models.IntegerField(null=True)
     competence_date = models.CharField(max_length=6, null=True)
-    record = models.ForeignKey(Record_history, on_delete=models.CASCADE, null=True, related_name='procedures_history')
     procedure = models.ForeignKey(Procedure, on_delete=models.CASCADE, null=True, related_name='procedures_history')
 
 
@@ -93,17 +91,15 @@ class Cid(BaseModel):
     sex_type = models.CharField(max_length=1, null=False)
     stadium_stype = models.CharField(max_length=1, null=False)
     irradiated_fields_value = models.IntegerField(null=False)
-    procedure = models.ForeignKey(Procedure, on_delete=models.CASCADE, null=True, related_name='cids')
 
 
 class Cid_history(BaseModel):
-    cid_code = models.CharField(max_length=4, primary_key=True)
+    cid_code = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, null=False)
     grievance_type = models.CharField(max_length=1, null=False)
     sex_type = models.CharField(max_length=1, null=False)
     stadium_stype = models.CharField(max_length=1, null=False)
     irradiated_fields_value = models.IntegerField(null=False)
-    procedure = models.ForeignKey(Procedure_history, on_delete=models.CASCADE, null=True, related_name='cids_history')
     cid = models.ForeignKey(Cid, on_delete=models.CASCADE, null=True, related_name='cids_history')
 
 
@@ -115,7 +111,7 @@ class Procedure_has_cid(BaseModel):
 
 
 class Procedure_has_cid_history(BaseModel):
-    st_principal = models.CharField(max_length=4, null=False)
+    st_principal = models.CharField(null=False)
     competence_date = models.CharField(max_length=6, null=False)
     procedure = models.ForeignKey(Procedure_history, on_delete=models.CASCADE, null=True, related_name='procedures_has_cid')
     cid = models.ForeignKey(Cid_history, on_delete=models.CASCADE, null=True, related_name='cids_has_procedure')
