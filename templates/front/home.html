@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{%  load static %}
+
+{% block title %}
+
+Home
+
+{% endblock %}
+
+{% block head %}
+
+    <link rel="stylesheet" href="{% static 'front/home_style.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+      <div class="flex justify-between pl-12 pr-12 pt-6 mb-12">
+          <img src="logo.png" alt="" class="w-auto h-16 max-h-4 mt-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+      </div>
+
+      <div class="content-principal">
+          <div>
+            <div class="welcome text-black-700 font-semibold text-3xl ml-12">
+                Olá, <b class="text-black-700">Sr(a) Rafael</b>
+            </div>
+            <div class="note text-gray-600 ml-12">
+                <b class="font-semibold">Oftalmologista</b>
+                <span>CRM/SP 123456</span>
+            </div>
+          </div>
+     
+          <div class="flex items-center bg-transparent p-2 ml-9 mr-9 mt-4 rounded-full">
+              <input type="text" class="shadow-md rounded-full bg-white focus:outline-none w-full p-2.5 pl-20 opacity-90" placeholder="Digite o procedimento">
+              <ion-icon class="w-6 h-6 absolute left-20 text-gray-600 opacity-40" name="menu-outline"></ion-icon>
+          </div>
+
+          <!-- <div class="flex justify-center items-center mt-2">
+            <img src="abstract.jpg" class=" w-95vw h-50vh object-cover">
+          </div>           -->
+      </div>
+
+      <div class="devices items-center">
+          <div class="title text-xl font-semibold mt-6 text-center">
+              Mais <b> Informações</b>
+          </div>
+          <div class="list mt-4">
+              <div class="item rounded-md bg-white shadow-md mr-4 mb-4 w-40 h-36 text-center">
+                  <ion-icon name="person-circle-outline" class="text-black-600 w-12 h-12 mx-auto"></ion-icon>
+                  <span class="text-sm mt-2">Meu Perfil</span> 
+              </div>                      
+              <div class="item rounded-md bg-white shadow-md mr-4 mb-4 text-center w-40 h-36">
+                  <ion-icon name="medical-outline" class="text-black-600 w-12 h-12 mx-auto"></ion-icon>
+                  <span>Todos Procedimentos</span>
+              </div>
+              <div class="item rounded-md bg-white shadow-md mr-4 mb-4 text-center w-40 h-36">
+                  <ion-icon name="help-circle-outline" class="text-black-600 w-12 h-12 mx-auto"></ion-icon>
+                  <span>Dúvidas</span>
+              </div>
+          </div>
+      </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+{% endblock %}

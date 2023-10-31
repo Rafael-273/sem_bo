@@ -28,6 +28,19 @@ class Occupation(BaseModel):
     name = models.CharField(max_length=150, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='occupations')
 
+    def save(self, *args, **kwargs):
+        super(Occupation, self).save(*args, **kwargs)
+
+        try:
+            history_entry = Occupation_history.objects.get(occupation=self)
+            history_entry.name = self.name
+            history_entry.save()
+        except Occupation_history.DoesNotExist:
+            Occupation_history.objects.create(
+                name=self.name,
+                occupation=self
+            )
+
 
 class Occupation_history(BaseModel):
     occupation_code = models.AutoField(primary_key=True)
@@ -40,6 +53,21 @@ class Record(BaseModel):
     record_code = models.CharField(max_length=2, primary_key=True)
     name = models.CharField(max_length=50, null=False)
     competence_date = models.CharField(max_length=6, null=False)
+
+    def save(self, *args, **kwargs):
+        super(Record, self).save(*args, **kwargs)
+
+        try:
+            history_entry = Record_history.objects.get(record=self)
+            history_entry.name = self.name
+            history_entry.competence_date = self.competence_date
+            history_entry.save()
+        except Record_history.DoesNotExist:
+            Record_history.objects.create(
+                name=self.name,
+                competence_date=self.competence_date,
+                record=self
+            )
 
 
 class Record_history(BaseModel):
@@ -64,6 +92,43 @@ class Procedure(BaseModel):
     SP_value = models.IntegerField(null=True)
     stay_time_number = models.IntegerField(null=True)
     competence_date = models.CharField(max_length=6, null=True)
+
+    def save(self, *args, **kwargs):
+        super(Procedure, self).save(*args, **kwargs)
+
+        try:
+            history_entry = Procedure_history.objects.get(procedure=self)
+            history_entry.name = self.name
+            history_entry.complexity_type = self.complexity_type
+            history_entry.sex_type = self.sex_type
+            history_entry.maximum_execution_amount = self.maximum_execution_amount
+            history_entry.stay_day_number = self.stay_day_number
+            history_entry.points_number = self.points_number
+            history_entry.minimum_age_value = self.minimum_age_value
+            history_entry.maximum_age_value = self.maximum_age_value
+            history_entry.SH_value = self.SH_value
+            history_entry.SA_value = self.SA_value
+            history_entry.SP_value = self.SP_value
+            history_entry.stay_time_number = self.stay_time_number
+            history_entry.competence_date = self.competence_date
+            history_entry.save()
+        except Procedure_history.DoesNotExist:
+            Procedure_history.objects.create(
+                name=self.name,
+                complexity_type=self.complexity_type,
+                sex_type=self.sex_type,
+                maximum_execution_amount=self.maximum_execution_amount,
+                stay_day_number=self.stay_day_number,
+                points_number=self.points_number,
+                minimum_age_value=self.minimum_age_value,
+                maximum_age_value=self.maximum_age_value,
+                SH_value=self.SH_value,
+                SA_value=self.SA_value,
+                SP_value=self.SP_value,
+                stay_time_number=self.stay_time_number,
+                competence_date=self.competence_date,
+                procedure=self
+            )
 
 
 class Procedure_history(BaseModel):
@@ -91,6 +156,27 @@ class Cid(BaseModel):
     sex_type = models.CharField(max_length=1, null=False)
     stadium_stype = models.CharField(max_length=1, null=False)
     irradiated_fields_value = models.IntegerField(null=False)
+
+    def save(self, *args, **kwargs):
+        super(Cid, self).save(*args, **kwargs)
+
+        try:
+            history_entry = Cid_history.objects.get(cid=self)
+            history_entry.name = self.name
+            history_entry.grievance_type = self.grievance_type
+            history_entry.sex_type = self.sex_type
+            history_entry.stadium_stype = self.stadium_stype
+            history_entry.irradiated_fields_value = self.irradiated_fields_value
+            history_entry.save()
+        except Cid_history.DoesNotExist:
+            Cid_history.objects.create(
+                name=self.name,
+                grievance_type=self.grievance_type,
+                sex_type=self.sex_type,
+                stadium_stype=self.stadium_stype,
+                irradiated_fields_value=self.irradiated_fields_value,
+                cid=self
+            )
 
 
 class Cid_history(BaseModel):

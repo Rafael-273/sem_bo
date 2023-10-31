@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.views import View
-from django.http import HttpResponseRedirect
-from django.http import HttpResponse
-from .models import Occupation, Record, Procedure, Cid
+from .models import Procedure
 from .process_files import DataImporter
 from django.shortcuts import redirect
+from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 class UploadFilesView(View):
@@ -16,9 +17,29 @@ class UploadFilesView(View):
     def post(self, request):
         arquivos = request.FILES.getlist('arquivos_txt')
 
-        DataImporter.import_procedure_data(arquivos)
+        for arquivo in arquivos:
+            if 'tb_procedimento' in arquivo.name:
+                DataImporter.import_procedure_data(arquivo)
+            elif 'tb_ocupacao' in arquivo.name:
+                DataImporter.import_occupation_data(arquivo)
+            elif 'tb_registro' in arquivo.name:
+                DataImporter.import_record_data(arquivo)
+            elif 'tb_cid' in arquivo.name:
+                DataImporter.import_cid_data(arquivo)
+            elif 'rl_procedimento_cid' in arquivo.name:
+                DataImporter.import_procedure_has_cid_data(arquivo)
+            elif 'rl_procedimento_ocupacao' in arquivo.name:
+                DataImporter.import_procedure_has_occupation_data(arquivo)
+            elif 'rl_procedimento_registro' in arquivo.name:
+                DataImporter.import_procedure_has_record_data(arquivo)
 
         return redirect('home')
 
-def home(request):
-    return HttpResponse("<html><body><h1>Olá, Mundo!</h1><p>Esta é a página inicial do meu site.</p></body></html>")
+class Home(ListView):
+    model = Procedure
+    template_name = 'front/home.html'
+    context_object_name = 'procedures'
+
+    # @method_decorator(login_required)
+    # def dispatch(self, *args, **kwargs):
+    #     return super().dispatch(*args, **kwargs)
