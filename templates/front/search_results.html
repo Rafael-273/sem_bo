@@ -1,0 +1,12 @@
+<div class="results-container">
+    {% if procedures %}
+        {% for procedure in procedures %}
+            <div class="procedure p-4 my-2 border rounded-lg">
+                <a href="">{{ procedure.name }}</a>
+                <ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div>Nenhum resultado encontrado.</div>
+    {% endif %}
+</div>

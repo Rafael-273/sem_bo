@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.db.models import Q
 
 
 class UploadFilesView(View):
@@ -43,3 +44,13 @@ class Home(ListView):
     # @method_decorator(login_required)
     # def dispatch(self, *args, **kwargs):
     #     return super().dispatch(*args, **kwargs)
+
+
+class SearchView(View):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q')
+        if query:
+            procedures = Procedure.objects.filter(Q(name__icontains=query))
+            return render(request, 'front/search_results.html', {'procedures': procedures})
+        else:
+            return render(request, 'front/home.html')
