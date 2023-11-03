@@ -45,14 +45,98 @@ body {
     .devices .list .item span {
         font-size: 12px !important;
     }
+    
+    .search_results {
+        overflow: hidden;
+    }
+
+    ::-webkit-scrollbar {
+        background: transparent !important;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: transparent !important;
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-corner {
+        background: transparent !important;
+        border-radius: 10px;
+    }
+
+    .search ion-icon {
+        left: 3rem !important;
+    }
+
+    .search input {
+        padding-left: 4rem !important;
+    }
+
+    .banner {
+        margin-top: 0.4rem !important;
+    }
+
+    .banner img {
+        height: 50vh !important;
+        width: 90vw !important;
+    }
 }
+
+@media (max-width: 393px) {
+    .search input {
+        padding-left: 4rem !important;
+    }
+    
+    .search ion-icon {
+        left: 3rem !important;
+    }
+
+    .banner img {
+        height: 47vh !important;
+        width: 89vw !important;
+        margin-bottom: 0.4rem;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1100px) {
+    .search input {
+        padding-left: 4rem !important;
+    }
+    
+    .search ion-icon {
+        left: 3rem !important;
+    }
+
+    .banner img {
+        height: 46vh !important;
+        width: 93.5vw !important;
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (min-width: 688px) and (max-width: 1023px) {
+    .search input {
+        padding-left: 4rem !important;
+    }
+    
+    .search ion-icon {
+        left: 3rem !important;
+    }
+
+    .banner img {
+        height: 53vh !important;
+        width: 93.5vw !important;
+        margin-bottom: 1.5rem;
+    }
+}
+
 
 .devices .list .item span {
     font-size: 14px;
 }
 
 .devices .list .item:hover {
-    background-color: #ebf6ff;
+    background-color: #f4faff;
     z-index: 999;
 }
 
@@ -68,6 +152,11 @@ body {
     background-color: #F4F4F8;
     border-radius: 10px;
     width: 100%;
+    padding-left: 5rem;
+}
+
+.search ion-icon {
+    left: 6rem;
 }
 
 .filter {
@@ -95,18 +184,19 @@ body {
     grid-template-rows: 10vh 70vh 9vh;
 }
 
-/* .banner {
+.banner {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 3rem;
 }
 
 .banner img {
-    border-radius: 20px;
-    width: 95vw;
+    border-radius: 10px;
+    width: 93.2vw;
     height: 50vh;
     object-fit: cover;
-} */
+}
 
 .content-principal {
     display: grid;
@@ -157,4 +247,26 @@ body {
 .procedure ion-icon {
     margin-top: 3px;
     cursor: pointer;
+}
+
+::-webkit-scrollbar {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(224, 224, 224);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-corner {
+    background: rgb(224, 224, 224);
+    border-radius: 10px;
+}
+
+.none {
+    display: none !important;
+}
+
+.block {
+    display: block !important;
 }

@@ -3,7 +3,7 @@
 
 {% block title %}
 
-Home
+Sem B.O
 
 {% endblock %}
 
@@ -30,8 +30,8 @@ Home
             {% csrf_token %}
             <div class="flex justify-center ml-4 mr-4">
                 <div class="search flex items-center bg-transparent p-2">
-                    <input type="text" class="search bg-white focus:outline-none w-full p-2.5 pl-20 opacity-90" placeholder="Digite o procedimento" name="q">
-                    <ion-icon class="w-6 h-6 absolute left-20 text-gray-600 opacity-40" name="search-outline"></ion-icon>
+                    <input type="text" class="search bg-white focus:outline-none w-full p-2.5 opacity-90" placeholder="Digite o procedimento" name="q">
+                    <ion-icon class="w-6 h-6 absolute text-gray-600 opacity-40" name="search-outline"></ion-icon>
                 </div>
                 <div class="filter bg-F4F4F8 flex justify-center items-center">
                     <ion-icon name="options-outline" class="w-6 h-6"></ion-icon>
@@ -40,21 +40,21 @@ Home
         </form>
         
 
-        <div class="flex items-center justify-center results">
+        <div class="flex items-center justify-center results none">
             <div class="search_results rounded-md">
             </div>
         </div>
         
-          <!-- <div class="flex justify-center items-center mt-2">
-            <img src="abstract.jpg" class=" w-95vw h-50vh object-cover">
-          </div> -->
+        <div class="banner flex justify-center items-center">
+            <img src="{% static 'assets/abstract.jpg' %}" class="object-cover">
+        </div>
     </div>
 
     <div class="devices items-center">
         <div class="title text-xl font-semibold mt-6 text-center">
             Mais <b> Informações</b>
         </div>
-        <div class="list mt-4">
+        <div class="list mt-2.5">
             <div class="item rounded-md bg-white shadow-md mr-4 mb-4 text-center">
                 <ion-icon name="person-circle-outline" class="text-black-600 mx-auto"></ion-icon>
                 <span class="text-sm mt-2">Meu Perfil</span> 
@@ -78,6 +78,7 @@ Home
     $(document).ready(function () {
         const form = $('#search-form');
         const searchResults = $('.search_results');
+        const banner = $('.banner');
 
         form.submit(function (e) {
             e.preventDefault();
@@ -90,6 +91,11 @@ Home
                     data: { 'q': query },
                     success: function (data) {
                         searchResults.html(data);
+                        banner.addClass('none')
+                        const div_search = searchResults.parent()
+                        div_search.removeClass('none')
+                        div_search.addClass('block')
+                        console.log(div_search)
                     }
                 });
             }

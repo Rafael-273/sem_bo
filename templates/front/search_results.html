@@ -3,6 +3,7 @@
         {% for procedure in procedures %}
             <div class="procedure p-4 my-2 border rounded-lg">
                 <a href="">{{ procedure.name }}</a>
+                <a href="">{{ procedure.get_record_name }}</a>
                 <ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>
             </div>
         {% endfor %}

@@ -50,7 +50,9 @@ class SearchView(View):
     def get(self, request, *args, **kwargs):
         query = request.GET.get('q')
         if query:
-            procedures = Procedure.objects.filter(Q(name__icontains=query))
+            procedures = Procedure.objects.filter(Q(name__icontains=query)).prefetch_related('procedures_has_record__record')
+
+
             return render(request, 'front/search_results.html', {'procedures': procedures})
         else:
             return render(request, 'front/home.html')
