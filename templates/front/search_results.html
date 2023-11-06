@@ -7,7 +7,51 @@
                 <ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>
             </div>
         {% endfor %}
+        {% if procedures.has_next %}
+            <button id="load-more" style="display: block;">More</button>
+        {% endif %}
+        <div class="loading" style="display: none;">
+            Loading...
+        </div>
     {% else %}
         <div>Nenhum resultado encontrado.</div>
     {% endif %}
 </div>
+
+<script src="https://cdn.jsdelivr.net/waypoints/4.0.1/noframework.waypoints.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        const form = $('#search-form');
+        const loadMoreButton = $('#load-more');
+        const loadingIndicator = $('.loading');
+        const banner = $('.banner');
+        const searchResults = $('.results-container:first');
+
+        let page = 1;
+        let loading = false;
+
+        loadMoreButton.click(function () {
+            console.log(page)
+            if (!loading) {
+                loading = true;
+                loadMoreButton.hide();
+                loadingIndicator.show();
+                const query = form.find('input[name="q"]').val().trim();
+
+                $.ajax({
+                    type: "GET",
+                    url: form.attr('action'),
+                    data: { 'q': query, 'page': page },
+                    success: function (data) {
+                        searchResults.append(data);
+                        loading = false;
+                        loadingIndicator.hide();
+                        loadMoreButton.show();
+                        page++;
+                    }
+                });
+            }
+        });
+    });
+</script>

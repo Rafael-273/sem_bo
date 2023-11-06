@@ -83,7 +83,6 @@ Sem B.O
         form.submit(function (e) {
             e.preventDefault();
             const query = form.find('input[name="q"]').val().trim();
-            console.log(query)
             if (query) {
                 $.ajax({
                     type: "GET",
