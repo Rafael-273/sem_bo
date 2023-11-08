@@ -108,8 +108,10 @@ Sem B.O
 
                             searchResults.html(html);
 
-                            searchResults.append('<button id="load-more" style="display: block;">Carregar Mais</button>');
-                            searchResults.append('<div class="loading" style="display: none;">carregando...</div>')
+                            if(data.procedures[0].has_more_results==true) {
+                                searchResults.append('<button id="load-more" style="display: block;">Carregar Mais</button>');
+                                searchResults.append('<div class="loading" style="display: none;">carregando...</div>')
+                            }
                         }
 
                         banner.addClass('none')
