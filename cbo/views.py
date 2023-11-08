@@ -57,6 +57,7 @@ class SearchView(View):
             procedures_list = Procedure.objects.filter(Q(name__icontains=query)).prefetch_related('procedures_has_record__record')
             page = request.GET.get('page', 1)
             paginator = Paginator(procedures_list, 20)
+
             try:
                 procedures = paginator.page(page)
             except PageNotAnInteger:
@@ -64,16 +65,14 @@ class SearchView(View):
             except EmptyPage:
                 procedures = paginator.page(paginator.num_pages)
 
-            return render(request, 'front/search_results.html', {'procedures': procedures})
+            data = []
+            has_more_results = procedures.has_next()
 
+            for procedure in procedures:
+                data.append({
+                    'name': procedure.name,
+                    'record_name': procedure.get_record_name(),
+                    'has_more_results': has_more_results,
+                })
 
-
-
-        # query = request.GET.get('q')
-        # if query:
-        #     procedures = Procedure.objects.filter(Q(name__icontains=query)).prefetch_related('procedures_has_record__record')
-
-
-        #     return render(request, 'front/search_results.html', {'procedures': procedures[:7]})
-        # else:
-        #     return render(request, 'front/home.html')
+            return JsonResponse({'procedures': data})

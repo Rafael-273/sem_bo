@@ -40,7 +40,7 @@ Sem B.O
         </form>
         
 
-        <div class="flex items-center justify-center results none">
+        <div class="results none">
             <div class="search_results rounded-md">
             </div>
         </div>
@@ -79,6 +79,10 @@ Sem B.O
         const form = $('#search-form');
         const searchResults = $('.search_results');
         const banner = $('.banner');
+        const loadingIndicator = $('.loading');
+
+        let page = 2;
+        let loading = false;
 
         form.submit(function (e) {
             e.preventDefault();
@@ -89,12 +93,75 @@ Sem B.O
                     url: form.attr('action'),
                     data: { 'q': query },
                     success: function (data) {
-                        searchResults.html(data);
+                        if (data.procedures && data.procedures.length > 0) {
+                            var html = '';
+
+                            data.procedures.forEach(function (procedure) {
+                                var procedureHTML = '<div class="procedure p-4 my-2 border rounded-lg">';
+                                procedureHTML += '<a href="#">' + procedure.name + '</a>';
+                                procedureHTML += '<a href="#">' + procedure.record_name + '</a>';
+                                procedureHTML += '<ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>';
+                                procedureHTML += '</div>';
+
+                                html += procedureHTML;
+                            });
+
+                            searchResults.html(html);
+
+                            searchResults.append('<button id="load-more" style="display: block;">Carregar Mais</button>');
+                            searchResults.append('<div class="loading" style="display: none;">carregando...</div>')
+                        }
+
                         banner.addClass('none')
                         const div_search = searchResults.parent()
                         div_search.removeClass('none')
                         div_search.addClass('block')
-                        console.log(div_search)
+                        const loadMoreButton = $('#load-more');
+                        const loadingIndicator = $('.loading');
+
+                        loadMoreButton.click(function () {
+                            if (!loading) {
+                                loading = true;
+                                loadMoreButton.hide();
+                                loadingIndicator.show();
+                                const query = form.find('input[name="q"]').val().trim();
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: form.attr('action'),
+                                    data: { 'q': query, 'page': page },
+                                    dataType: "json",
+                                    success: function (data) {
+                                        if (data.procedures && data.procedures.length > 0) {
+                                            data.procedures.forEach(function (procedure) {
+                                                var procedureDiv = $('<div class="procedure p-4 my-2 border rounded-lg"></div>');
+                                                var nameLink = $('<a href="#">' + procedure.name + '</a>');
+                                                var recordLink = $('<a href="#">' + procedure.record_name + '</a>');
+                                                var icon = $('<ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>');
+
+                                                procedureDiv.append(nameLink);
+                                                procedureDiv.append(recordLink);
+                                                procedureDiv.append(icon)
+                                           
+                                                searchResults.append(procedureDiv);
+                                                procedureDiv.insertBefore(loadMoreButton);
+                                            });
+
+                                            if(data.procedures[0].has_more_results==false) {
+                                                loadMoreButton.remove();
+                                                loadingIndicator.remove()
+                                            }
+
+                                            page++;
+
+                                        }
+                                        loading = false;
+                                        loadingIndicator.hide();
+                                        loadMoreButton.show();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }

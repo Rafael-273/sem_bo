@@ -209,13 +209,10 @@ body {
 }
 
 .search_results {
-    width: 100%;
+    width: 93.2%;
     height: 100% !important;
     margin-bottom: 2rem;
     overflow-y: auto;
-    display: flex;
-    justify-content: center;
-    align-content: center;
 }
 
 .procedure:first-child {
@@ -224,6 +221,9 @@ body {
 
 .results {
     max-height: 45vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .results-container {
@@ -268,5 +268,23 @@ body {
 }
 
 .block {
-    display: block !important;
+    display: flex !important;
+}
+
+#load-more {
+    display: block;
+    text-align: center;
+    width: 100%;
+    background-color: RGB(245, 245, 249);
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.loading {
+    display: block;
+    text-align: center;
+    width: 100%;
+    background-color: RGB(245, 245, 249);
+    padding: 10px;
+    border-radius: 12px;
 }
