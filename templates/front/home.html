@@ -35,6 +35,7 @@ Sem B.O
                 </div>
                 <div class="filter bg-F4F4F8 flex justify-center items-center">
                     <ion-icon name="options-outline" class="w-6 h-6"></ion-icon>
+                    <ion-icon name="close-outline" class="w-6 h-6" style="display: none;"></ion-icon>
                 </div>
             </div>
         </form>
@@ -47,6 +48,21 @@ Sem B.O
         
         <div class="banner flex justify-center items-center">
             <img src="{% static 'assets/abstract.jpg' %}" class="object-cover">
+        </div>
+
+        <div class="modal-content" hidden>
+            <span class="close" id="close-modal">&times;</span>
+            <h2>Filter Results</h2>
+            
+            <label for="record-name-filter">Filter by Record Name:</label>
+            <select id="record-name-filter">
+                <option value="all">All</option>
+                {% for record_name in record_names %}
+                    <option value="{{ record_name }}">{{ record_name }}</option>
+                {% endfor %}
+            </select>
+
+            <button id="apply-filter">Apply Filter</button>
         </div>
     </div>
 
@@ -80,13 +96,49 @@ Sem B.O
         const searchResults = $('.search_results');
         const banner = $('.banner');
         const loadingIndicator = $('.loading');
+        const optionsIcon = $('.filter ion-icon[name="options-outline"]');
+        const closeIcon = $('.filter ion-icon[name="close-outline"]');
+        const filterIcon = $('.filter ion-icon');
 
         let page = 2;
         let loading = false;
 
+        function createProcedureHTML(procedure) {
+            const procedureDiv = $('<div class="procedure p-4 my-2 border rounded-lg"></div>');
+            const nameLink = $('<a href="#">' + procedure.name + '</a>');
+            const recordLink = $('<a href="#">' + procedure.record_name + '</a>');
+            const icon = $('<ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>');
+
+            procedureDiv.append(nameLink, recordLink, icon);
+            searchResults.append(procedureDiv);
+
+            if($('#load-more')){
+                const loadMoreButton = $('#load-more');
+                procedureDiv.insertBefore(loadMoreButton);
+            }
+
+            return procedureDiv;
+        }
+
+        function updateFilterStyles() {
+            if (searchActive) {
+                filterIcon.css({ color: 'white' });
+                $('.filter').css({ 'background-color': 'rgb(243 106 106 / 75%)' });
+            } else {
+                filterIcon.css({ color: 'initial' });
+                $('.filter').css({ 'background-color': '#F4F4F8' });
+            }
+        }
+
         form.submit(function (e) {
             e.preventDefault();
+
+            searchActive = true;
+            updateFilterStyles();
+
+            searchResults.empty();
             const query = form.find('input[name="q"]').val().trim();
+
             if (query) {
                 $.ajax({
                     type: "GET",
@@ -94,30 +146,25 @@ Sem B.O
                     data: { 'q': query },
                     success: function (data) {
                         if (data.procedures && data.procedures.length > 0) {
-                            var html = '';
 
-                            data.procedures.forEach(function (procedure) {
-                                var procedureHTML = '<div class="procedure p-4 my-2 border rounded-lg">';
-                                procedureHTML += '<a href="#">' + procedure.name + '</a>';
-                                procedureHTML += '<a href="#">' + procedure.record_name + '</a>';
-                                procedureHTML += '<ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>';
-                                procedureHTML += '</div>';
+                            const proceduresHTML = data.procedures.map(createProcedureHTML);
 
-                                html += procedureHTML;
-                            });
-
-                            searchResults.html(html);
-
-                            if(data.procedures[0].has_more_results==true) {
+                            if (data.procedures[0].has_more_results) {
                                 searchResults.append('<button id="load-more" style="display: block;">Carregar Mais</button>');
-                                searchResults.append('<div class="loading" style="display: none;">carregando...</div>')
+                                searchResults.append('<div class="loading" style="display: none;">carregando...</div>');
                             }
+
+                            optionsIcon.hide();
+                            closeIcon.show();
                         }
 
+                        updateFilterStyles();
                         banner.addClass('none')
                         const div_search = searchResults.parent()
+
                         div_search.removeClass('none')
                         div_search.addClass('block')
+                        
                         const loadMoreButton = $('#load-more');
                         const loadingIndicator = $('.loading');
 
@@ -135,19 +182,7 @@ Sem B.O
                                     dataType: "json",
                                     success: function (data) {
                                         if (data.procedures && data.procedures.length > 0) {
-                                            data.procedures.forEach(function (procedure) {
-                                                var procedureDiv = $('<div class="procedure p-4 my-2 border rounded-lg"></div>');
-                                                var nameLink = $('<a href="#">' + procedure.name + '</a>');
-                                                var recordLink = $('<a href="#">' + procedure.record_name + '</a>');
-                                                var icon = $('<ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>');
-
-                                                procedureDiv.append(nameLink);
-                                                procedureDiv.append(recordLink);
-                                                procedureDiv.append(icon)
-                                           
-                                                searchResults.append(procedureDiv);
-                                                procedureDiv.insertBefore(loadMoreButton);
-                                            });
+                                            const proceduresHTML = data.procedures.map(createProcedureHTML);
 
                                             if(data.procedures[0].has_more_results==false) {
                                                 loadMoreButton.remove();
@@ -157,6 +192,7 @@ Sem B.O
                                             page++;
 
                                         }
+
                                         loading = false;
                                         loadingIndicator.hide();
                                         loadMoreButton.show();
@@ -168,7 +204,21 @@ Sem B.O
                 });
             }
         });
+
+        closeIcon.parent().click(function() {
+            searchActive = false;
+            updateFilterStyles();
+
+            searchResults.empty();
+            closeIcon.hide();
+            optionsIcon.show();
+            banner.removeClass('none');
+            const div_search = searchResults.parent();
+            div_search.removeClass('block');
+            div_search.addClass('none');
+        });
     });
+
 </script>
 
 {% endblock %}
