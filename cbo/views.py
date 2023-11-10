@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from .models import Procedure
+from .models import Procedure, Record
 from .process_files import DataImporter
 from django.shortcuts import redirect
 from django.views.generic import ListView
@@ -40,10 +40,16 @@ class UploadFilesView(View):
 
         return redirect('home')
 
+
 class Home(ListView):
     model = Procedure
     template_name = 'front/home.html'
     context_object_name = 'procedures'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['records'] = Record.objects.all()
+        return context
 
     # @method_decorator(login_required)
     # def dispatch(self, *args, **kwargs):
@@ -53,8 +59,16 @@ class Home(ListView):
 class SearchView(View):
     def get(self, request, *args, **kwargs):
         query = request.GET.get('q')
+        record_name = request.GET.get('record_name')
+
         if query:
             procedures_list = Procedure.objects.filter(Q(name__icontains=query)).prefetch_related('procedures_has_record__record')
+
+            if record_name != 'all':
+                procedures_list = procedures_list.filter(procedures_has_record__record__name=record_name)
+
+            procedures_list = procedures_list.prefetch_related('procedures_has_record__record')
+
             page = request.GET.get('page', 1)
             paginator = Paginator(procedures_list, 20)
 
@@ -71,8 +85,9 @@ class SearchView(View):
             for procedure in procedures:
                 data.append({
                     'name': procedure.name,
-                    'record_name': procedure.get_record_name(),
+                    'records_names': procedure.get_records_names(),
                     'has_more_results': has_more_results,
                 })
+
 
             return JsonResponse({'procedures': data})

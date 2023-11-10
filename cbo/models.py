@@ -125,9 +125,12 @@ class Procedure(BaseModel):
             models.Index(fields=['procedure_code', 'name']),
         ]
 
-    def get_record_name(self):
+    def get_records_names(self):
+        records = []
         if self.procedures_has_record.exists():
-            return self.procedures_has_record.first().record.name
+            for record in self.procedures_has_record.all():
+                records.append(record.record.name)
+            return records
         return "N/A"
 
     def save(self, *args, **kwargs):
