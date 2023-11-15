@@ -83,6 +83,10 @@ body {
 }
 
 @media (max-width: 393px) {
+    .results {
+        margin: 1rem 0;
+    }
+
     .search input {
         padding-left: 4rem !important;
     }
@@ -92,7 +96,7 @@ body {
     }
 
     .banner img {
-        height: 47vh !important;
+        height: 45vh !important;
         width: 89vw !important;
         margin-bottom: 0.4rem;
     }
@@ -245,7 +249,8 @@ body {
 }
 
 .procedure ion-icon {
-    margin-top: 3px;
+    margin-top: 0.2rem;
+    margin-left: 1rem;
     cursor: pointer;
 }
 
@@ -304,4 +309,18 @@ body {
     height: 100vh;
     cursor: pointer;
     z-index: 9;
+}
+
+.title_tags .title {
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+.records_tags a {
+    background-color: #f3f3f899;
+    padding: 6px;
+    border-radius: 5px;
+    color: black;
+    margin-right: 5px;
 }

@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-faa83cdn**1a1+!x7#woxv%4bnptttw#p=(79ug77bh(8g*v!#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.0.108', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -106,7 +105,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'auth.User'
+# AUTHENTICATION_BACKENDS = [
+#     'path.to.EmailBackend',
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
+
+AUTH_USER_MODEL = 'cbo.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    max-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    color: #000;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 1fr 2fr 1fr;
+    justify-items: center;
+}
+
+.logo {
+    width: 50%;
+}
+
+form div input {
+    background-color: #F2F2F7;
+}
+
+.button_login {
+    background-color: #0F0F0F !important;
+    color: white;
+}
+
+.login {
+    width: 90%;
+}
+
+.login h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+
+.reset_password {
+    justify-content: right;
+}

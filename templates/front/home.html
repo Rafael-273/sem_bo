@@ -18,11 +18,11 @@ Sem B.O
     <div class="content-principal">
         <div class="welcome-div">
             <div class="welcome text-black-700 font-semibold text-3xl">
-                Olá, <b class="text-black-700">Sr(a) Rafael</b>
+                Olá, <b class="text-black-700">Sr(a) {{ user.first_name }}</b>
             </div>
             <div class="note text-gray-600">
-                <b class="font-semibold">Oftalmologista</b>
-                <span>CRM/SP 123456</span>
+                <b class="font-semibold">{{ user.occupation }} </b>
+                <span>{{ user.CRM }}</span>
             </div>
         </div>
     
@@ -35,7 +35,9 @@ Sem B.O
                 </div>
                 <div id="filter" class="filter bg-F4F4F8 flex justify-center items-center">
                     <ion-icon name="options-outline" class="w-6 h-6"></ion-icon>
-                    <ion-icon name="close-outline" class="w-6 h-6" style="display: none;"></ion-icon>
+                </div>
+                <div id="close-filter" class="filter bg-F4F4F8 flex justify-center items-center" style="display: none; background-color: rgb(243 106 106 / 85%)">
+                    <ion-icon name="close-outline" style="color: white;" class="w-6 h-6"></ion-icon>
                 </div>
             </div>
         </form>
@@ -114,11 +116,16 @@ Sem B.O
 
         function createProcedureHTML(procedure) {
             const procedureDiv = $('<div class="procedure p-4 my-2 border rounded-lg"></div>');
-            const nameLink = $('<a href="#">' + procedure.name + '</a>');
-            const recordLink = $('<a href="#">' + procedure.records_names + '</a>');
+            const nameLink = $('<div class="title_tags"><a class="title" href="#">' + procedure.name + '</a></div>');
+            const records = $('<div class="records_tags"></div>')
+            procedure.records_names.forEach(function (recordName) {
+                const recordLink = $('<a href="#">' + recordName + '</a>');
+                records.append(recordLink)
+                nameLink.append(records);
+            });
             const icon = $('<ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>');
 
-            procedureDiv.append(nameLink, recordLink, icon);
+            procedureDiv.append(nameLink, icon);
             searchResults.append(procedureDiv);
 
             if($('#load-more')){
@@ -129,15 +136,13 @@ Sem B.O
             return procedureDiv;
         }
 
-        function updateFilterStyles() {
+        function toggleFilterVisibility() {
             if (searchActive) {
-                filterIcon.css({ color: 'white' });
-                $('.filter').css({ 'background-color': 'rgb(243 106 106 / 85%)' });
-                $('.filter').removeAttr('id');
+                $('#filter').hide();
+                $('#close-filter').show();
             } else {
-                filterIcon.css({ color: 'initial' });
-                $('.filter').css({ 'background-color': '#F4F4F8' });
-                $('.filter').attr("id", "filter")
+                $('#filter').show();
+                $('#close-filter').hide();
             }
         }
 
@@ -145,7 +150,7 @@ Sem B.O
             e.preventDefault();
 
             searchActive = true;
-            updateFilterStyles();
+            toggleFilterVisibility();
 
             searchResults.empty();
             const query = form.find('input[name="q"]').val().trim();
@@ -171,7 +176,7 @@ Sem B.O
                             closeIcon.show();
                         }
 
-                        updateFilterStyles();
+                        toggleFilterVisibility();
                         banner.addClass('none')
                         const div_search = searchResults.parent()
 
@@ -220,7 +225,7 @@ Sem B.O
 
         closeIcon.parent().click(function() {
             searchActive = false;
-            updateFilterStyles();
+            toggleFilterVisibility();
 
             searchResults.empty();
             closeIcon.hide();

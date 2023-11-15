@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 
 
 class BaseModel(models.Model):
@@ -11,32 +12,17 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class User(BaseModel):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=55)
-    last_name = models.CharField(max_length=55)
-    CPF = models.CharField(max_length=11)
-    specialty = models.CharField(max_length=255)
-    email = models.CharField(max_length=55)
-    telephone = models.CharField(max_length=15)
-    date_of_birth = models.DateField()
-    CRM = models.CharField(max_length=15)
-
-    class Meta:
-        indexes = [
-            models.Index(fields=['first_name', 'CRM']),
-        ]
-
-
 class Occupation(BaseModel):
     occupation_code = models.CharField(max_length=6, primary_key=True)
     name = models.CharField(max_length=150, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='occupations')
 
     class Meta:
         indexes = [
-            models.Index(fields=['occupation_code', 'name', 'user']),
+            models.Index(fields=['occupation_code', 'name']),
         ]
+
+    def __str__(self):
+        return self.name
 
     def save(self, *args, **kwargs):
         super(Occupation, self).save(*args, **kwargs)
@@ -57,13 +43,37 @@ class Occupation(BaseModel):
 class Occupation_history(BaseModel):
     occupation_code = models.CharField(max_length=6)
     name = models.CharField(max_length=150, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='occupations_history')
     occupation = models.ForeignKey(Occupation, on_delete=models.CASCADE, null=True, related_name='occupations_history')
 
     class Meta:
         indexes = [
-            models.Index(fields=['occupation_code', 'name', 'user', 'occupation']),
+            models.Index(fields=['occupation_code', 'name', 'occupation']),
         ]
+
+
+class User(AbstractUser):
+    CPF = models.CharField(max_length=11)
+    specialty = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    telephone = models.CharField(max_length=15)
+    date_of_birth = models.DateField(null=True, blank=True, default=None)
+    CRM = models.CharField(max_length=15)
+    occupation = models.ForeignKey(Occupation, on_delete=models.CASCADE, null=True, related_name='occupations')
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['first_name', 'CRM']),
+        ]
+
+    def save(self, *args, **kwargs):
+        if not self.password.startswith(('pbkdf2_sha256$', 'bcrypt', 'argon2')):
+            self.set_password(self.password)
+
+        super(User, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.username
+
 
 class Record(BaseModel):
     record_code = models.CharField(max_length=2, primary_key=True)

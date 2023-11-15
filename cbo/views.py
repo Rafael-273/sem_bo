@@ -7,10 +7,14 @@ from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db.models import Q
-from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
-from django.template.loader import render_to_string
+from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
+from .forms import EmailAuthenticationForm
 
 
 class UploadFilesView(View):
@@ -40,6 +44,10 @@ class UploadFilesView(View):
 
         return redirect('home')
 
+    @method_decorator(login_required(login_url='/login'))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 class Home(ListView):
     model = Procedure
@@ -49,11 +57,15 @@ class Home(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['records'] = Record.objects.all()
+
+        user = self.request.user
+        context['user'] = user
+
         return context
 
-    # @method_decorator(login_required)
-    # def dispatch(self, *args, **kwargs):
-    #     return super().dispatch(*args, **kwargs)
+    @method_decorator(login_required(login_url='/login'))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class SearchView(View):
@@ -62,7 +74,12 @@ class SearchView(View):
         record_name = request.GET.get('record_name')
 
         if query:
-            procedures_list = Procedure.objects.filter(Q(name__icontains=query)).prefetch_related('procedures_has_record__record')
+            user_occupation = request.user.occupation
+
+            procedures_list = Procedure.objects.filter(
+                Q(name__icontains=query) &
+                Q(procedures_has_occupation__occupation=user_occupation)
+            ).prefetch_related('procedures_has_record__record')
 
             if record_name != 'all':
                 procedures_list = procedures_list.filter(procedures_has_record__record__name=record_name)
@@ -89,5 +106,33 @@ class SearchView(View):
                     'has_more_results': has_more_results,
                 })
 
-
             return JsonResponse({'procedures': data})
+
+    @method_decorator(login_required(login_url='/login'))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+class UserLoginView(LoginView):
+    template_name = 'front/login.html'
+    authentication_form = EmailAuthenticationForm
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        return HttpResponseRedirect(reverse_lazy('home'))
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        messages.error(self.request, 'Credenciais inválidas. Tente novamente.')
+        return HttpResponseRedirect(reverse_lazy('login'))
+
+
+class LogoutView(LogoutView):
+    next_page = reverse_lazy('login')
+
+
+class ChatView(View):
+    template_name = 'front/chat.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
