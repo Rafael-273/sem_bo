@@ -45,6 +45,9 @@ class Occupation_history(BaseModel):
     name = models.CharField(max_length=150, null=True)
     occupation = models.ForeignKey(Occupation, on_delete=models.CASCADE, null=True, related_name='occupations_history')
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         indexes = [
             models.Index(fields=['occupation_code', 'name', 'occupation']),
@@ -80,6 +83,9 @@ class Record(BaseModel):
     name = models.CharField(max_length=50, null=False)
     competence_date = models.CharField(max_length=6, null=False)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         indexes = [
             models.Index(fields=['record_code', 'name']),
@@ -109,6 +115,9 @@ class Record_history(BaseModel):
     competence_date = models.CharField(max_length=6, null=False)
     record = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, related_name='records_history')
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         indexes = [
             models.Index(fields=['record_code', 'name', 'record']),
@@ -129,6 +138,9 @@ class Procedure(BaseModel):
     SP_value = models.IntegerField(null=True)
     stay_time_number = models.IntegerField(null=True)
     competence_date = models.CharField(max_length=6, null=True)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         indexes = [
@@ -200,6 +212,9 @@ class Procedure_history(BaseModel):
     competence_date = models.CharField(max_length=6, null=True)
     procedure = models.ForeignKey(Procedure, on_delete=models.CASCADE, null=True, related_name='procedures_history')
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         indexes = [
             models.Index(fields=['procedure_code', 'name', 'procedure']),
@@ -213,6 +228,9 @@ class Cid(BaseModel):
     sex_type = models.CharField(max_length=1, null=False)
     stadium_stype = models.CharField(max_length=1, null=False)
     irradiated_fields_value = models.IntegerField(null=False)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         indexes = [
@@ -253,6 +271,9 @@ class Cid_history(BaseModel):
     cid = models.ForeignKey(Cid, on_delete=models.CASCADE, null=True, 
     related_name='cids_history')
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         indexes = [
             models.Index(fields=['cid_code', 'name', 'cid']),
@@ -264,6 +285,9 @@ class Procedure_has_cid(BaseModel):
     competence_date = models.CharField(max_length=6, null=False)
     procedure = models.ForeignKey(Procedure, on_delete=models.CASCADE, null=True, related_name='procedures_has_cid')
     cid = models.ForeignKey(Cid, on_delete=models.CASCADE, null=True, related_name='cids_has_procedure')
+
+    def __str__(self):
+        return f'{self.cid} => {self.procedure}'
 
     class Meta:
         indexes = [
@@ -297,6 +321,9 @@ class Procedure_has_cid_history(BaseModel):
     cid = models.ForeignKey(Cid_history, on_delete=models.CASCADE, null=True, related_name='cids_has_procedure')
     procedure_has_cid = models.ForeignKey(Procedure_has_cid, on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return f'{self.cid} => {self.procedure}'
+
     class Meta:
         indexes = [
             models.Index(fields=['procedure', 'cid', 'procedure_has_cid']),
@@ -307,6 +334,9 @@ class Procedure_has_occupation(BaseModel):
     competence_date = models.CharField(max_length=6, null=False)
     procedure = models.ForeignKey(Procedure, on_delete=models.CASCADE, null=True, related_name='procedures_has_occupation')
     occupation = models.ForeignKey(Occupation, on_delete=models.CASCADE, null=True, related_name='occupations_has_procedure')
+
+    def __str__(self):
+        return f'{self.occupation} => {self.procedure}'
 
     class Meta:
         indexes = [
@@ -337,6 +367,9 @@ class Procedure_has_occupation_history(BaseModel):
     occupation = models.ForeignKey(Occupation_history, on_delete=models.CASCADE, null=True, related_name='occupations_has_procedure')
     procedure_has_occupation = models.ForeignKey(Procedure_has_occupation, on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return f'{self.occupation} => {self.procedure}'
+
     class Meta:
         indexes = [
             models.Index(fields=['procedure', 'occupation', 'procedure_has_occupation']),
@@ -347,6 +380,9 @@ class Procedure_has_record(BaseModel):
     competence_date = models.CharField(max_length=6, null=False)
     procedure = models.ForeignKey(Procedure, on_delete=models.CASCADE, null=True, related_name='procedures_has_record')
     record = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, related_name='records_has_procedure')
+
+    def __str__(self):
+        return f'{self.record} => {self.procedure}'
 
     class Meta:
         indexes = [
@@ -376,6 +412,9 @@ class Procedure_has_record_history(BaseModel):
     procedure = models.ForeignKey(Procedure_history, on_delete=models.CASCADE, null=True, related_name='procedures_has_record')
     record = models.ForeignKey(Record_history, on_delete=models.CASCADE, null=True, related_name='records_has_procedure')
     procedure_has_record = models.ForeignKey(Procedure_has_record, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f'{self.record} => {self.procedure}'
 
     class Meta:
         indexes = [

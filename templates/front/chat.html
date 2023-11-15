@@ -16,10 +16,10 @@ Sem B.O
 
 {% block content %}
 
-    <div id="chat-container" class="max-w-md mx-auto bg-white p-4 rounded-md shadow-md">
-        <div id="chat-log" class="mb-4 h-40 overflow-y-auto border-b border-gray-300"></div>
+    <div id="chat-container" class="w-full mx-auto bg-white p-6 rounded-md">
+        <div id="chat-log" class="mb-4 h-40 overflow-y-auto"></div>
         <div class="flex">
-            <input type="text" id="user-input" class="flex-1 px-2 py-1 rounded-l-md border-t border-b border-l border-gray-300" placeholder="Digite sua mensagem">
+            <input type="text" id="user-input" class="flex-1 px-2 py-1 rounded-l-md border-t border-b border-l border-gray-300 focus:outline-none w-full p-2.5 opacity-90" placeholder="Digite sua mensagem">
             <button onclick="sendMessage()" class="px-4 py-1 bg-blue-500 text-white rounded-r-md hover:bg-blue-600">Enviar</button>
         </div>
     </div>
