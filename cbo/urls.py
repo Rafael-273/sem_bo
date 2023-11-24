@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UploadFilesView, Home, SearchView, UserLoginView, LogoutView, ChatView
+from .views import UploadFilesView, Home, SearchView, UserLoginView, LogoutView, ChatView, ProcedureDetailView
 from . import views
 
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path('login/', UserLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('chat/', ChatView.as_view(), name='chat'),
+    path('procedure/<str:procedure_code>/', ProcedureDetailView.as_view(), name='procedure_detail'),
 ]

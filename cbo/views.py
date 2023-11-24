@@ -15,6 +15,8 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from .forms import EmailAuthenticationForm
+from django.views.generic import DetailView
+from django.urls import reverse
 
 
 class UploadFilesView(View):
@@ -136,3 +138,19 @@ class ChatView(View):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+
+
+@method_decorator(login_required(login_url='/login'), name='dispatch')
+class ProcedureDetailView(DetailView):
+    model = Procedure
+    template_name = 'front/procedure_detail.html'
+    context_object_name = 'procedure'
+    slug_field = 'procedure_code'
+    slug_url_kwarg = 'procedure_code'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        procedure = context['procedure']
+        context['records'] = Record.objects.all()
+        context['procedure_urls'] = {procedure.procedure_code: reverse('procedure_detail', args=[procedure.procedure_code])}
+        return context

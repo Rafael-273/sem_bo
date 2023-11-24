@@ -114,9 +114,9 @@ Sem B.O
         let page = 2;
         let loading = false;
 
-        function createProcedureHTML(procedure) {
+        function createProcedureHTML(procedure, procedure_url) {
             const procedureDiv = $('<div class="procedure p-4 my-2 border rounded-lg"></div>');
-            const nameLink = $('<div class="title_tags"><a class="title" href="#">' + procedure.name + '</a></div>');
+            const nameLink = $('<div class="title_tags"><a class="title" href="' + procedure_url + '">' + procedure.name + '</a></div>');
             const records = $('<div class="records_tags"></div>')
             procedure.records_names.forEach(function (recordName) {
                 const recordLink = $('<a href="#">' + recordName + '</a>');
