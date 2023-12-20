@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext as _ 
 
 
 class BaseModel(models.Model):
@@ -56,16 +57,18 @@ class Occupation_history(BaseModel):
 
 class User(AbstractUser):
     CPF = models.CharField(max_length=11)
-    specialty = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(_("email address"), unique=True)
     telephone = models.CharField(max_length=15)
-    date_of_birth = models.DateField(null=True, blank=True, default=None)
-    CRM = models.CharField(max_length=15)
+    date_of_birth = models.DateField(null=False, blank=False, default='2000-01-01')
+    occupational_registration = models.CharField(max_length=15)
     occupation = models.ForeignKey(Occupation, on_delete=models.CASCADE, null=True, related_name='occupations')
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
         indexes = [
-            models.Index(fields=['first_name', 'CRM']),
+            models.Index(fields=['first_name', 'occupational_registration']),
         ]
 
     def save(self, *args, **kwargs):

@@ -1,0 +1,26 @@
+.super {
+    background-color: #F4F4F8;
+}
+
+section {
+    width: 100vw;
+}
+
+ion-icon {
+    color: black;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.menu-super {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+
+.save {
+    justify-items: right;
+    justify-self: right;
+}

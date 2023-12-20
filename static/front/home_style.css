@@ -241,17 +241,45 @@ body {
 
 .procedure {
     display: grid;
-    grid-template-columns: 32fr 1fr;
+    grid-template-columns: 32fr 1fr 1fr;
 }
 
 .procedure a {
     font-size: 12px;
 }
 
+.help {
+    background-color: #f3f3f899;
+    display: flex;
+    width: 3.5rem;
+    height: 3.2rem;
+    border-radius: 0 1rem 1rem 0;
+    align-items: center;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.help:hover {
+    background-color: #dfdfe499;
+    transition: 0.5s;
+    width: 4rem;
+    align-items: center;
+    height: 3.2rem;
+}
+
+.help ion-icon{
+    align-self: center !important;
+    font-size: 1.5rem;
+    font-weight: bolder;
+    justify-self: center;
+    justify-content: center;
+}
+
 .procedure ion-icon {
     margin-top: 0.2rem;
     margin-left: 1rem;
     cursor: pointer;
+    align-self: center;
 }
 
 ::-webkit-scrollbar {

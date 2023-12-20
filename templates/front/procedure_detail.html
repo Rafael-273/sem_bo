@@ -1,4 +1,6 @@
+{% extends 'base.html' %}
 {%  load static %}
+
 
 {% block title %}
 
@@ -8,12 +10,34 @@ Sem B.O
 
 {% block head %}
 
-    <link rel="stylesheet" href="{% static 'front/home_style.css' %}">
+    <link rel="stylesheet" href="{% static 'front/detail_style.css' %}">
 
 {% endblock %}
 
 {% block content %}
 
-{{ procedure.name }}
+<section class="mx-auto">
+    <div class="super text-white p-4">
+        <div class="menu-super">
+            <ion-icon name="chevron-back-outline"></ion-icon>
+            <ion-icon class="save" name="bookmark-outline"></ion-icon>
+        </div>
+        <div>
+
+        </div>
+    </div>
+
+    <div class="bg-gray-300 p-4 mb-4">
+      <h1 class="text-2xl font-bold mb-2">{{ procedure.name }}</h1>
+      <div class="flex space-x-4">
+        <button class="bg-green-500 text-white px-4 py-2 rounded">Botão 1</button>
+        <button class="bg-red-500 text-white px-4 py-2 rounded">Botão 2</button>
+      </div>
+    </div>
+
+    <div class="bg-white p-4">
+      <p>Descrição da página vai aqui...</p>
+    </div>
+</section>
 
 {% endblock %}

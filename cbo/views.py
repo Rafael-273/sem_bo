@@ -154,3 +154,83 @@ class ProcedureDetailView(DetailView):
         context['records'] = Record.objects.all()
         context['procedure_urls'] = {procedure.procedure_code: reverse('procedure_detail', args=[procedure.procedure_code])}
         return context
+
+
+class ProcedureListView(View):
+    template_name = 'front/procedure_list.html'
+    procedures_per_page = 30
+
+    def get(self, request, *args, **kwargs):
+        user_occupation = request.user.occupation
+
+        query = request.GET.get('q', '')  
+        print(query)
+        record_name = request.GET.get('record_name', '')  
+
+        procedures_list = Procedure.objects.filter(
+            Q(name__icontains=query) &
+            Q(procedures_has_occupation__occupation=user_occupation)
+        ).prefetch_related('procedures_has_record__record')
+
+        if record_name != 'all' and record_name:
+            procedures_list = procedures_list.filter(procedures_has_record__record__name=record_name)
+
+        procedures_list = procedures_list.prefetch_related('procedures_has_record__record')
+
+        page = request.GET.get('page', 1)
+        paginator = Paginator(procedures_list, self.procedures_per_page)
+
+        try:
+            procedures = paginator.page(page)
+        except PageNotAnInteger:
+            procedures = paginator.page(1)
+        except EmptyPage:
+            procedures = paginator.page(paginator.num_pages)
+
+        context = {
+            'procedures': procedures,
+            'has_next': procedures.has_next(),
+            'record_name': record_name,
+        }
+
+        return render(request, self.template_name, context)
+
+
+class ProcedureLoadMoreView(View):
+    procedures_per_page = 30
+
+    def get(self, request, *args, **kwargs):
+        user_occupation = request.user.occupation
+
+        record_name = request.GET.get('record_name', '')  
+
+        procedures_list = Procedure.objects.filter(
+            Q(procedures_has_occupation__occupation=user_occupation)
+        ).prefetch_related('procedures_has_record__record')
+
+        if record_name != 'all' and record_name:
+            procedures_list = procedures_list.filter(procedures_has_record__record__name=record_name)
+
+        procedures_list = procedures_list.prefetch_related('procedures_has_record__record')
+
+        page = request.GET.get('page', 1)
+        paginator = Paginator(procedures_list, self.procedures_per_page)
+
+        try:
+            procedures = paginator.page(page)
+        except PageNotAnInteger:
+            procedures = paginator.page(1)
+        except EmptyPage:
+            procedures = paginator.page(paginator.num_pages)
+
+        data = []
+        has_more_results = procedures.has_next()
+
+        for procedure in procedures:
+            data.append({
+                'name': procedure.name,
+                'records_names': procedure.get_records_names(),
+                'has_more_results': has_more_results,
+            })
+
+        return JsonResponse({'procedures': data})

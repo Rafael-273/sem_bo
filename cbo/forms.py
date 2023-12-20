@@ -10,4 +10,4 @@ class EmailAuthenticationForm(AuthenticationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ['email', 'password']

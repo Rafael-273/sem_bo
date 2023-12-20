@@ -15,6 +15,8 @@ Sem B.O
 
 {% block content %}
 
+    {% include 'parciais/menu.html' %}
+
     <div class="content-principal">
         <div class="welcome-div">
             <div class="welcome text-black-700 font-semibold text-3xl">
@@ -85,10 +87,10 @@ Sem B.O
                 <ion-icon name="person-circle-outline" class="text-black-600 mx-auto"></ion-icon>
                 <span class="text-sm mt-2">Meu Perfil</span> 
             </div>                      
-            <div class="item rounded-md bg-white shadow-md mr-4 mb-4 text-center">
+            <a href="{% url 'procedure_list' %}"><div class="item rounded-md bg-white shadow-md mr-4 mb-4 text-center">
                 <ion-icon name="medical-outline" class="text-black-600 mx-auto"></ion-icon>
                 <span>Todos Procedimentos</span>
-            </div>
+            </div></a>
             <div class="item rounded-md bg-white shadow-md mr-4 mb-4 text-center">
                 <ion-icon name="help-circle-outline" class="text-black-600 mx-auto"></ion-icon>
                 <span>Dúvidas</span>
@@ -124,8 +126,9 @@ Sem B.O
                 nameLink.append(records);
             });
             const icon = $('<ion-icon name="bookmark-outline" class="w-5 h-5"></ion-icon>');
+            const help = $('<div class="help"><ion-icon name="help-circle-outline" role="img" class="md hydrated"></ion-icon></div>');
 
-            procedureDiv.append(nameLink, icon);
+            procedureDiv.append(nameLink, icon, help);
             searchResults.append(procedureDiv);
 
             if($('#load-more')){
@@ -155,7 +158,6 @@ Sem B.O
             searchResults.empty();
             const query = form.find('input[name="q"]').val().trim();
             const record_name = recordNameFilter.value;
-            console.log(record_name)
 
             if (query) {
                 $.ajax({
