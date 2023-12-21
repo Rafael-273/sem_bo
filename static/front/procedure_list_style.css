@@ -148,6 +148,32 @@ body {
     margin-right: 5px;
 }
 
+.modal-content {
+    position: absolute;
+    align-self: center;
+    justify-self: center;
+    z-index: 10;
+    bottom: 40vh;
+}
+
+.blur {
+    position: absolute;
+    top: 0;
+    backdrop-filter: blur(1px);
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 9;
+}
+
+.content-principal {
+    display: flex;
+    max-height: 100%;
+    max-width: 100%;
+    justify-content: center;
+}
+
+
 @media (max-width: 687px) {
     .results {
         width: 94vw;

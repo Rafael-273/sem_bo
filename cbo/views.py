@@ -17,6 +17,7 @@ from django.urls import reverse_lazy
 from .forms import EmailAuthenticationForm
 from django.views.generic import DetailView
 from django.urls import reverse
+from django.shortcuts import get_object_or_404
 
 
 class UploadFilesView(View):
@@ -202,16 +203,29 @@ class ProcedureLoadMoreView(View):
     def get(self, request, *args, **kwargs):
         user_occupation = request.user.occupation
 
+        query = request.GET.get('q')
         record_name = request.GET.get('record_name', '')  
 
-        procedures_list = Procedure.objects.filter(
-            Q(procedures_has_occupation__occupation=user_occupation)
-        ).prefetch_related('procedures_has_record__record')
+        if query:
+            procedures_list = Procedure.objects.filter(
+                Q(name__icontains=query) &
+                Q(procedures_has_occupation__occupation=user_occupation)
+            ).prefetch_related('procedures_has_record__record')
 
-        if record_name != 'all' and record_name:
-            procedures_list = procedures_list.filter(procedures_has_record__record__name=record_name)
+            if record_name != 'all':
+                procedures_list = procedures_list.filter(procedures_has_record__record__name=record_name)
 
-        procedures_list = procedures_list.prefetch_related('procedures_has_record__record')
+            procedures_list = procedures_list.prefetch_related('procedures_has_record__record')
+
+        else:
+            procedures_list = Procedure.objects.filter(
+                Q(procedures_has_occupation__occupation=user_occupation)
+            ).prefetch_related('procedures_has_record__record')
+
+            if record_name != 'all' and record_name:
+                procedures_list = procedures_list.filter(procedures_has_record__record__name=record_name)
+
+            procedures_list = procedures_list.prefetch_related('procedures_has_record__record')
 
         page = request.GET.get('page', 1)
         paginator = Paginator(procedures_list, self.procedures_per_page)
@@ -229,6 +243,7 @@ class ProcedureLoadMoreView(View):
         for procedure in procedures:
             data.append({
                 'name': procedure.name,
+                'code': procedure.procedure_code,
                 'records_names': procedure.get_records_names(),
                 'has_more_results': has_more_results,
             })

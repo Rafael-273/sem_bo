@@ -322,7 +322,7 @@ body {
     border-radius: 12px;
 }
 
-.modal-content {
+/* .modal-content {
     position: absolute;
     align-self: center;
     justify-self: center;
@@ -337,7 +337,7 @@ body {
     height: 100vh;
     cursor: pointer;
     z-index: 9;
-}
+} */
 
 .title_tags .title {
     font-size: 14px;
